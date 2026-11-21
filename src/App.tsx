@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
-import type { PropsWithChildren } from 'react'
-import { Text } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'
-import Snackbar from 'react-native-snackbar'
+import {
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
-
-
-
+import {Snackbar} from 'react-native-snackbar'
+import Icons from './components/Icons';
 
 
 
 function App() {
+
 const [isCross,setIsCross] = useState<boolean>(false)
 const [gameWinner,setGameWinner] = useState<string>('')
 const [gameState,setGameState] = useState(new Array(9).fill('empty',0,9))
@@ -75,10 +80,9 @@ const checkIsWinner = () => {
     setGameWinner(`${gameState[2]} won the game!!!`);
   }
 
-  else 
-  {
-    setGameWinner(`!!!GAME DRAW!!!`);
-  }
+  else if (!gameState.includes('empty', 0)) {
+      setGameWinner('Draw game... ⌛️');
+    }
 
 
 }
@@ -88,12 +92,12 @@ const onChangeItem = (itemNumber: number) => {
   {
   return  Snackbar.show({
       text: gameWinner,
-      backgroundColor:'Green',
+      backgroundColor:'green',
       textColor:'yellow'
     })
   }
 
-  if(gameState[itemNumber] !== 'empty' )
+  if(gameState[itemNumber] === 'empty' )
   {
     gameState[itemNumber] = isCross ? 'cross' : 'circle'
     setIsCross(!isCross)
@@ -112,11 +116,42 @@ const onChangeItem = (itemNumber: number) => {
 }
 
   return (
-    <Text>App</Text>
+    <SafeAreaView>
+      <StatusBar />
+      {gameWinner? (
+          <View style={[styles.playerInfo, styles.winnerInfo]}>
+            <Text style={[styles.winnerTxt]}>{gameWinner}</Text>
+          </View>
+      ):(
+        <View style={[styles.playerInfo, isCross? styles.playerX: styles.playerO]} >
+            <Text style={[styles.gameTurnTxt]}>Player {isCross? 'X': 'O'}'s Turn</Text>
+        </View>
+      )}
+
+      <FlatList  
+      numColumns={3}
+      data = {gameState}
+      style={styles.grid}
+      renderItem={({item, index}) => (
+        <Pressable 
+        key={index}
+        style={[styles.card]}
+        onPress={() => onChangeItem(index)} >
+              <Icons name={item}/>
+        </Pressable>
+      )}
+      />
+
+
+      {/* gameAction */}
+      <Pressable style={styles.gameBtn}
+      onPress={()=> reloadGame()}>
+        <Text style={styles.gameBtnText}>{gameWinner? 'StartNewGame': 'Reload the game'} </Text>
+      </Pressable>
+
+    </SafeAreaView>
   )
 }
-
-
 
 
 const styles = StyleSheet.create({
