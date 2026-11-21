@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
   FlatList,
   Pressable,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -11,7 +10,7 @@ import {
 
 import {Snackbar} from 'react-native-snackbar'
 import Icons from './components/Icons';
-
+import LinearGradient from 'react-native-linear-gradient';
 
 
 function App() {
@@ -116,26 +115,34 @@ const onChangeItem = (itemNumber: number) => {
 }
 
   return (
-    <SafeAreaView>
+    <LinearGradient
+      colors={['#17132F', '#302B63', '#24243E']}
+      style={styles.mainContainer}
+    >
+
       <StatusBar />
       {gameWinner? (
-          <View style={[styles.playerInfo, styles.winnerInfo]}>
+          <View style={[styles.playerInfo, styles.winnerInfo,styles.glass]}>
             <Text style={[styles.winnerTxt]}>{gameWinner}</Text>
           </View>
       ):(
-        <View style={[styles.playerInfo, isCross? styles.playerX: styles.playerO]} >
-            <Text style={[styles.gameTurnTxt]}>Player {isCross? 'X': 'O'}'s Turn</Text>
+        <View style={[styles.playerInfo, styles.glass ]} >
+             <Text style={[
+                styles.gameTurnTxt,
+                isCross ? styles.playerXText : styles.playerOText,
+              ]} >
+    Player {isCross? 'X': 'O'}'s Turn</Text>
         </View>
       )}
 
       <FlatList  
       numColumns={3}
       data = {gameState}
-      style={styles.grid}
+      style={[ styles.grid]}
       renderItem={({item, index}) => (
         <Pressable 
         key={index}
-        style={[styles.card]}
+        style={[styles.glass, styles.card]}
         onPress={() => onChangeItem(index)} >
               <Icons name={item}/>
         </Pressable>
@@ -144,17 +151,30 @@ const onChangeItem = (itemNumber: number) => {
 
 
       {/* gameAction */}
-      <Pressable style={styles.gameBtn}
+      <Pressable style={[styles.gameBtn,styles.glass]}
       onPress={()=> reloadGame()}>
         <Text style={styles.gameBtnText}>{gameWinner? 'StartNewGame': 'Reload the game'} </Text>
       </Pressable>
 
-    </SafeAreaView>
+    </LinearGradient>
   )
 }
 
 
 const styles = StyleSheet.create({
+  
+  mainContainer:{
+    flex:1,
+    backgroundColor:'gold',
+    paddingVertical:100
+  },
+  glass:{
+    backgroundColor:'rgba(255,255,255,0.1)',
+    borderColor:'rgba(255,255,255,0.3)',
+   
+    borderWidth:1,
+  },
+  
   playerInfo: {
     height: 56,
 
@@ -180,14 +200,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
   },
-  playerX: {
-    backgroundColor: '#38CC77',
-  },
-  playerO: {
-    backgroundColor: '#F7CD2E',
-  },
+  playerXText: {
+  color: '#2DD4BF', // Teal for X
+},
+
+playerOText: {
+  color: '#A78BFA', // Purple for O
+},
   grid: {
     margin: 12,
+    borderRadius:20,
   },
   card: {
     height: 100,

@@ -15,11 +15,11 @@ const Icons = ({name} : IconsProps ) =>
   switch(name)
   {
     case 'circle':
-      return <Icon name='circle-thin' size={38} color='lime'/>
+      return <Icon name='circle-thin' size={38} color='orange'/>
       
   
     case 'cross':
-      return <Icon name='times' size={38} color='darkgreen'/>
+      return <Icon name='times' size={38} color='skyblue'/>
       
     default:
       return <Icon name='pencil' size={38} color='yellow'/>
